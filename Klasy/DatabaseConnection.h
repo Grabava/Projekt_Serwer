@@ -16,6 +16,7 @@ class DatabaseConnection {
     sql::Connection *con;
     sql::Statement *stmt;
     sql::ResultSet *res;
+    sql::ResultSetMetaData *res_meta;
     int userID;
 public:
     DatabaseConnection(){
@@ -28,10 +29,18 @@ public:
 
     }
 
-    bool veryfiLogin(json jsonDATA);
-    bool veryfiRegister(json jsonDATA);
-    bool sendPrivateMessage(json jsonDATA);
-    json getPrivateMessage(json jsonDaTA);
+    bool veryfiLogin(json jsonData);
+    bool veryfiRegister(json jsonData);
+    json getAllGroups(json jsonData);
+    json getAllUsers();
+    bool createGroup(json jsonData);
+    bool addUserToGroup(json jsonData);
+    bool sendPrivateMessage(json jsonData);
+    bool sendGroupMessage(json jsonData);
+    json getRecentPrivateMessage(json jsonData);
+    json getPrivateMessages(json jsonData);
+    json getRecentGroupMessage(json jsonData);
+    json getGroupMessages(json jsonData);
 };
 
 

@@ -25,7 +25,7 @@ public:
 
     inline json GetAllUsers();
 
-    inline json CreateGroup(json jsonWithData);
+    inline json CreateGroup(json jsonData);
 
     inline json AddUserToGroup(json jsonWithData);
 

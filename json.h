@@ -2309,7 +2309,7 @@ using is_detected_convertible =
 #endif
 
 // C++ language standard detection
-// if the user manually specified the used c++ version this is skipped
+// if the ClassWithIdAndName manually specified the used c++ version this is skipped
 #if !defined(JSON_HAS_CPP_20) && !defined(JSON_HAS_CPP_17) && !defined(JSON_HAS_CPP_14) && !defined(JSON_HAS_CPP_11)
     #if (defined(__cplusplus) && __cplusplus >= 202002L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)
         #define JSON_HAS_CPP_20
@@ -3590,7 +3590,7 @@ struct has_from_json < BasicJsonType, T, enable_if_t < !is_basic_json<T>::value 
 };
 
 // This trait checks if JSONSerializer<T>::from_json(json const&) exists
-// this overload is used for non-default-constructible user-defined-types
+// this overload is used for non-default-constructible ClassWithIdAndName-defined-types
 template<typename BasicJsonType, typename T, typename = void>
 struct has_non_default_from_json : std::false_type {};
 
@@ -5113,7 +5113,7 @@ namespace nlohmann
 @brief an internal type for a backed binary type
 
 This type extends the template parameter @a BinaryType provided to `basic_json`
-with a subtype used by BSON and MessagePack. This type exists so that the user
+with a subtype used by BSON and MessagePack. This type exists so that the ClassWithIdAndName
 does not have to specify a type themselves with a specific naming scheme in
 order to override the binary type.
 
@@ -11640,8 +11640,8 @@ class iter_impl // NOLINT(cppcoreguidelines-special-member-functions,hicpp-speci
   public:
 
     /// The std::iterator class template (used as a base class to provide typedefs) is deprecated in C++17.
-    /// The C++ Standard has never required user-defined iterators to derive from std::iterator.
-    /// A user-defined iterator should provide publicly accessible typedefs named
+    /// The C++ Standard has never required ClassWithIdAndName-defined iterators to derive from std::iterator.
+    /// A ClassWithIdAndName-defined iterator should provide publicly accessible typedefs named
     /// iterator_category, value_type, difference_type, pointer, and reference.
     /// Note that value_type is required to be non-const, even for constant iterators.
     using iterator_category = std::bidirectional_iterator_tag;
@@ -17795,7 +17795,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     ////////////////
 
     /// @name exceptions
-    /// Classes to implement user-defined exceptions.
+    /// Classes to implement ClassWithIdAndName-defined exceptions.
     /// @{
 
     /// @copydoc detail::exception
@@ -18401,7 +18401,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     Additionally, as an implementation detail, the subtype of the binary data is
     carried around as a `std::uint8_t`, which is compatible with both of the
     binary data formats that use binary subtyping, (though the specific
-    numbering is incompatible with each other, and it is up to the user to
+    numbering is incompatible with each other, and it is up to the ClassWithIdAndName to
     translate between them).
 
     [CBOR's RFC 7049](https://tools.ietf.org/html/rfc7049) describes this type
@@ -24542,7 +24542,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @note A UTF-8 byte order mark is silently ignored.
 
     @liveexample{The example below demonstrates the `sax_parse()` function
-    reading from string and processing the events with a user-defined SAX
+    reading from string and processing the events with a ClassWithIdAndName-defined SAX
     event consumer.,sax_parse}
 
     @since version 3.2.0
@@ -26457,9 +26457,9 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 };
 
 /*!
-@brief user-defined to_string function for JSON values
+@brief ClassWithIdAndName-defined to_string function for JSON values
 
-This function implements a user-defined to_string  for JSON objects.
+This function implements a ClassWithIdAndName-defined to_string  for JSON objects.
 
 @param[in] j  a JSON object
 @return a std::string object
@@ -26532,9 +26532,9 @@ inline void swap(nlohmann::NLOHMANN_BASIC_JSON_TPL& j1, nlohmann::NLOHMANN_BASIC
 } // namespace std
 
 /*!
-@brief user-defined string literal for JSON values
+@brief ClassWithIdAndName-defined string literal for JSON values
 
-This operator implements a user-defined string literal for JSON objects. It
+This operator implements a ClassWithIdAndName-defined string literal for JSON objects. It
 can be used by adding `"_json"` to a string literal and returns a JSON object
 if no parse error occurred.
 
@@ -26551,9 +26551,9 @@ inline nlohmann::json operator "" _json(const char* s, std::size_t n)
 }
 
 /*!
-@brief user-defined string literal for JSON pointer
+@brief ClassWithIdAndName-defined string literal for JSON pointer
 
-This operator implements a user-defined string literal for JSON Pointers. It
+This operator implements a ClassWithIdAndName-defined string literal for JSON Pointers. It
 can be used by adding `"_json_pointer"` to a string literal and returns a JSON pointer
 object if no parse error occurred.
 
