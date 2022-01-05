@@ -60,7 +60,6 @@ void ReceiveAndResend::receiveAction(int id, json jsonData) {
 json ReceiveAndResend::Login(json jsonData) {
 
     json resultJSON;
-    resultJSON["id"] = 1;
     resultJSON["result"] = dbConnect.veryfiLogin(jsonData);
 
     return resultJSON;
@@ -69,7 +68,6 @@ json ReceiveAndResend::Login(json jsonData) {
 json ReceiveAndResend::Registration(json jsonData) {
 
     json resultJSON;
-    resultJSON["id"] = 2;
     resultJSON["result"] = dbConnect.veryfiRegister(jsonData);
 
     return resultJSON;
@@ -77,19 +75,14 @@ json ReceiveAndResend::Registration(json jsonData) {
 
 json ReceiveAndResend::GetAllGroups() {
 
-    json resultJSON;
-    resultJSON["id"] = 3;
+    json resultJSON = dbConnect.getAllGroups();
 
     return resultJSON;
 }
 
 json ReceiveAndResend::GetAllUsers() {
 
-    json resultJSON;
-    //resultJSON["id"] = 4;
-    resultJSON = dbConnect.getAllUsers();
-
-    std::string teststst = resultJSON.dump();
+    json resultJSON = dbConnect.getAllUsers();
 
     return resultJSON;
 }
@@ -97,7 +90,6 @@ json ReceiveAndResend::GetAllUsers() {
 json ReceiveAndResend::CreateGroup(json jsonData) {
 
     json resultJSON;
-    resultJSON["id"] = 5;
     resultJSON["result"] = dbConnect.createGroup(jsonData);
 
     return resultJSON;
@@ -106,7 +98,6 @@ json ReceiveAndResend::CreateGroup(json jsonData) {
 json ReceiveAndResend::AddUserToGroup(json jsonData) {
 
     json resultJSON;
-    resultJSON["id"] = 6;
     resultJSON["result"] = dbConnect.addUserToGroup(jsonData);
 
     return resultJSON;
@@ -115,7 +106,6 @@ json ReceiveAndResend::AddUserToGroup(json jsonData) {
 json ReceiveAndResend::SendPrivateMessage(json jsonData) {
 
     json resultJSON;
-    resultJSON["id"] = 7;
     resultJSON["result"] = dbConnect.sendPrivateMessage(jsonData);
 
     return resultJSON;
@@ -124,8 +114,7 @@ json ReceiveAndResend::SendPrivateMessage(json jsonData) {
 json ReceiveAndResend::SendGroupMessage(json jsonData) {
 
     json resultJSON;
-    resultJSON["id"] = 8;
-    resultJSON["result"] = "Group message send";
+    resultJSON["result"] = dbConnect.sendGroupMessage(jsonData);
 
     return resultJSON;
 }
@@ -140,27 +129,21 @@ json ReceiveAndResend::GetRecentPrivateMessage(json jsonData) {
 
 json ReceiveAndResend::GetAllPrivateMessages(json jsonData) {
 
-    json resultJSON;
-    resultJSON["id"] = 10;
-    resultJSON["result"] = "Group message send";
+    json resultJSON = dbConnect.getPrivateMessages(jsonData);
 
     return resultJSON;
 }
 
 json ReceiveAndResend::GetRecentGroupMessage(json jsonData) {
 
-    json resultJSON;
-    resultJSON["id"] = 11;
-    resultJSON["result"] = "Group message send";
+    json resultJSON = dbConnect.getRecentGroupMessage(jsonData);
 
     return resultJSON;
 }
 
 json ReceiveAndResend::GetAllGroupMessages(json jsonData) {
 
-    json resultJSON;
-    resultJSON["id"] = 12;
-    resultJSON["result"] = "Group message send";
+    json resultJSON = dbConnect.getGroupMessages(jsonData);
 
     return resultJSON;
 }

@@ -40,12 +40,15 @@ int main()
     void *ret;
 
     json test;
-    test["id"] = 4;
+    test["id"] = 3;
+    test["authorId"] = 1;
+    test["groupId"] = 2;
 
     ReceiveAndResend testClass = ReceiveAndResend(test.dump());
 
     json result = testClass.getResult();
 
+    string wyniki =  result.dump();
 
 
 

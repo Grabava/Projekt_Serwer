@@ -8,16 +8,19 @@
 
 #ifndef PROJEKT_DATABASECONNECTION_H
 #define PROJEKT_DATABASECONNECTION_H
+
 using json = nlohmann::json;
 using namespace sql::mysql;
+
 class DatabaseConnection {
 
     sql::Driver *driver;
     sql::Connection *con;
     sql::Statement *stmt;
     sql::ResultSet *res;
-    sql::ResultSetMetaData *res_meta;
-    int userID;
+
+    int userId = 1;
+
 public:
     DatabaseConnection(){
 
@@ -31,7 +34,7 @@ public:
 
     bool veryfiLogin(json jsonData);
     bool veryfiRegister(json jsonData);
-    json getAllGroups(json jsonData);
+    json getAllGroups();
     json getAllUsers();
     bool createGroup(json jsonData);
     bool addUserToGroup(json jsonData);
