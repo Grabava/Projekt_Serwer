@@ -59,8 +59,7 @@ void ReceiveAndResend::receiveAction(int id, json jsonData) {
 
 json ReceiveAndResend::Login(json jsonData) {
 
-    json resultJSON;
-    resultJSON["result"] = dbConnect.veryfiLogin(jsonData);
+    json resultJSON = dbConnect.veryfiLogin(jsonData);
 
     return resultJSON;
 }
@@ -104,6 +103,7 @@ json ReceiveAndResend::AddUserToGroup(json jsonData) {
 }
 
 json ReceiveAndResend::SendPrivateMessage(json jsonData) {
+
 
     json resultJSON;
     resultJSON["result"] = dbConnect.sendPrivateMessage(jsonData);

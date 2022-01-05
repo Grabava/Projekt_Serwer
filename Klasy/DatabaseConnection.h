@@ -20,8 +20,6 @@ class DatabaseConnection {
     sql::Statement *stmt;
     sql::ResultSet *res;
 
-    int userId = 1;
-
 public:
     DatabaseConnection(){
 
@@ -33,9 +31,9 @@ public:
 
     }
 
-    bool veryfiLogin(json jsonData);
+    json veryfiLogin(json jsonData);
     bool veryfiRegister(json jsonData);
-    json getAllGroups();
+    json getAllGroups(json jsonData);
     json getAllUsers();
     bool createGroup(json jsonData);
     bool addUserToGroup(json jsonData);

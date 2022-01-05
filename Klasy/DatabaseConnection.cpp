@@ -4,17 +4,16 @@
 
 using namespace std;
 
-bool DatabaseConnection::veryfiLogin(json jsonData) {
+json DatabaseConnection::veryfiLogin(json jsonData) {
 
-    std::string query = "SELECT id FROM Users AS u WHERE Name = \"";
+    std::string query = "SELECT Id FROM Users WHERE Name = \"";
     query += jsonData["login"];
     query += "\" AND Token = \"";
     query += jsonData["password"];
     query += "\" ;";
 
     try {
-        stmt = con->createStatement();
-        stmt->execute(query);
+        res = stmt->executeQuery(query);
     }
     catch(sql::SQLException &e) {
         cout << "# ERR: SQLException in " << __FILE__;
@@ -24,10 +23,13 @@ bool DatabaseConnection::veryfiLogin(json jsonData) {
         cout << ", SQLState: " << e.getSQLState() << " )" << endl;
         return false;
     }
+    json resultJson;
+
     while (res->next()) {
-        return true;
+        resultJson["result"] = true;
+        resultJson["userId"] = res->getInt("Id");
     }
-    return false;
+    resultJson["result"] = false;
 }
 
 bool DatabaseConnection::veryfiRegister(json jsonData) {
@@ -71,11 +73,13 @@ bool DatabaseConnection::veryfiRegister(json jsonData) {
     }
 }
 
-json DatabaseConnection::getAllGroups() {
+json DatabaseConnection::getAllGroups(json jsonData) {
 
     std::string query = "SELECT Id, Name FROM Groups_Table ";
                 query += "INNER JOIN GroupMembers ON Groups_Table.Id = GroupMembers.GroupId ";
-                query += "WHERE GroupMembers.UserId = 2;";
+                query += "WHERE GroupMembers.UserId = ";
+                query += to_string(jsonData["userId"]);
+                query += ";";
 
     try {
         res = stmt->executeQuery(query);
@@ -169,7 +173,7 @@ bool DatabaseConnection::addUserToGroup(json jsonData) {
 bool DatabaseConnection::sendPrivateMessage(json jsonData) {
 
     std::string query = "INSERT INTO PrivateMessage (AuthorId, Message, RecevierId, Date) VALUES (";
-    query += to_string(userId);
+    query += to_string(jsonData["userId"]);
     query += ", \"";
     query += jsonData["messageContent"];
     query += "\", ";
@@ -196,7 +200,7 @@ bool DatabaseConnection::sendPrivateMessage(json jsonData) {
 bool DatabaseConnection::sendGroupMessage(json jsonData) {
 
     std::string query = "INSERT INTO GroupMessage (AuthorId, Message, GroupId, Date) VALUES (";
-    query += to_string(userId);
+    query += to_string(jsonData["userId"]);
     query += ", \"";
     query += jsonData["messageContent"];
     query += "\", ";
@@ -223,7 +227,7 @@ bool DatabaseConnection::sendGroupMessage(json jsonData) {
 json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
 
     std::string query = "SELECT Message, RecevierId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
-                query += to_string(userId);
+                query += to_string(jsonData["userId"]);
                 query += " AND AuthorId = ";
                 query += to_string(jsonData["authorId"]);
                 query += " GROUP BY Message ORDER BY MAX(Date) DESC LIMIT 1;";
@@ -253,7 +257,7 @@ json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
 json DatabaseConnection::getPrivateMessages(json jsonData) {
 
     std::string query = "SELECT Message, RecevierId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
-    query += to_string(userId);
+    query += to_string(jsonData["userId"]);
     query += " AND AuthorId = ";
     query += to_string(jsonData["authorId"]);
     query += " GROUP BY Message, Date ORDER BY Date;";
