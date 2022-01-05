@@ -39,19 +39,6 @@ int main()
     memset(msg2,0,100);
     void *ret;
 
-    json test;
-    test["id"] = 3;
-    test["authorId"] = 1;
-    test["groupId"] = 2;
-
-    ReceiveAndResend testClass = ReceiveAndResend(test.dump());
-
-    json result = testClass.getResult();
-
-    string wyniki =  result.dump();
-
-
-
     struct sockaddr_in server =
             {
                     .sin_family = AF_INET,
@@ -143,8 +130,6 @@ void *connection_handler(void *socket_desc) {
     char message[1024];
     int read_size;
     json messageJson;
-
-    int userID;
 
     printf("we are in connection handler");
 

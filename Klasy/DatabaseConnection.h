@@ -11,6 +11,7 @@
 
 using json = nlohmann::json;
 using namespace sql::mysql;
+using namespace std;
 
 class DatabaseConnection {
 
@@ -44,7 +45,7 @@ public:
     json getPrivateMessages(json jsonData);
     json getRecentGroupMessage(json jsonData);
     json getGroupMessages(json jsonData);
-};
 
+};
 
 #endif //PROJEKT_DATABASECONNECTION_H
