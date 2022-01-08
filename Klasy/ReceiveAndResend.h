@@ -21,7 +21,7 @@ public:
 
     json Registration(json jsonWithData);
 
-    inline json GetAllGroups();
+    inline json GetAllGroups(json jsonData);
 
     inline json GetAllUsers();
 

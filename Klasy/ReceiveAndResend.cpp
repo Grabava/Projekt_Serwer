@@ -23,7 +23,7 @@ void ReceiveAndResend::receiveAction(int id, json jsonData) {
             result = Registration(jsonData);
             break;
         case 3:
-            result = GetAllGroups();
+            result = GetAllGroups(jsonData);
             break;
         case 4:
             result = GetAllUsers();
@@ -72,9 +72,9 @@ json ReceiveAndResend::Registration(json jsonData) {
     return resultJSON;
 }
 
-json ReceiveAndResend::GetAllGroups() {
+json ReceiveAndResend::GetAllGroups(json jsonData) {
 
-    json resultJSON = dbConnect.getAllGroups();
+    json resultJSON = dbConnect.getAllGroups(jsonData);
 
     return resultJSON;
 }

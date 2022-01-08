@@ -21,7 +21,7 @@
 #include "pthread.h"
 
 #define PORT 2137
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "192.168.0.15"
 #define MAXSZ 100
 #define MAXSOCK 70000
 
@@ -90,9 +90,12 @@ int main()
             new_sock = (int *) malloc(sizeof(int));
             *new_sock = clientSocket;
             int p = -1;
+            char message[1024];
+        //    if (read(new_socket, message, 1024) > 0) {//TO DO sprawdzenie odebrania;
             p = pthread_create(&sniffer_thread[i], NULL, connection_handler, (void *) new_sock);
             if (p < 0) {
                 perror("could not create thread");
+
                 return 1;
             }
             p = pthread_join(sniffer_thread[i], &ret);
@@ -101,6 +104,7 @@ int main()
 
             }
         }
+//    }
 
     return 0;
 }
@@ -138,6 +142,8 @@ void *connection_handler(void *socket_desc) {
         mess.resize(mess.size(), 5);
         ReceiveAndResend receive = ReceiveAndResend(mess);
         messageJson = receive.getResult();
+        cout << messageJson << endl;
+       // messageJson = "cvhuj";
         write(sock, messageJson.dump().c_str(), strlen(messageJson.dump().c_str()));
     } else {
         //Free the socket pointer

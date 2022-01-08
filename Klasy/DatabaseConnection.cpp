@@ -173,7 +173,7 @@ bool DatabaseConnection::addUserToGroup(json jsonData) {
 bool DatabaseConnection::sendPrivateMessage(json jsonData) {
 
     std::string query = "INSERT INTO PrivateMessage (AuthorId, Message, RecevierId, Date) VALUES (";
-    query += to_string(jsonData["userId"]);
+    query += to_string(jsonData["authorId"]);
     query += ", \"";
     query += jsonData["messageContent"];
     query += "\", ";
@@ -200,7 +200,7 @@ bool DatabaseConnection::sendPrivateMessage(json jsonData) {
 bool DatabaseConnection::sendGroupMessage(json jsonData) {
 
     std::string query = "INSERT INTO GroupMessage (AuthorId, Message, GroupId, Date) VALUES (";
-    query += to_string(jsonData["userId"]);
+    query += to_string(jsonData["authorId"]);
     query += ", \"";
     query += jsonData["messageContent"];
     query += "\", ";
@@ -227,7 +227,7 @@ bool DatabaseConnection::sendGroupMessage(json jsonData) {
 json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
 
     std::string query = "SELECT Message, RecevierId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
-                query += to_string(jsonData["userId"]);
+                query += to_string(jsonData["receiverId"]);
                 query += " AND AuthorId = ";
                 query += to_string(jsonData["authorId"]);
                 query += " GROUP BY Message ORDER BY MAX(Date) DESC LIMIT 1;";
@@ -257,7 +257,7 @@ json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
 json DatabaseConnection::getPrivateMessages(json jsonData) {
 
     std::string query = "SELECT Message, RecevierId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
-    query += to_string(jsonData["userId"]);
+    query += to_string(jsonData["receiverId"]);
     query += " AND AuthorId = ";
     query += to_string(jsonData["authorId"]);
     query += " GROUP BY Message, Date ORDER BY Date;";
