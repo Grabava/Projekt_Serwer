@@ -4,12 +4,15 @@
 
 DatabaseConnection dbConnect = DatabaseConnection();
 
+json result;
+
 ReceiveAndResend::ReceiveAndResend(std::string message) {
     json jsonData = json::parse(message);
     receiveAction(jsonData["id"], jsonData);
 }
 
 json ReceiveAndResend::getResult() {
+
     return result;
 }
 

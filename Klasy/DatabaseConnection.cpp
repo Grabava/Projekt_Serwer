@@ -1,6 +1,5 @@
 
 #include "DatabaseConnection.h"
-#include "ClassWithIdAndName.h"
 
 using namespace std;
 
@@ -21,15 +20,17 @@ json DatabaseConnection::veryfiLogin(json jsonData) {
         cout << "# ERR: " << e.what();
         cout << " (MySQL error code: " << e.getErrorCode();
         cout << ", SQLState: " << e.getSQLState() << " )" << endl;
-        return false;
+
+
     }
     json resultJson;
-
+    resultJson["result"] = false;
     while (res->next()) {
         resultJson["result"] = true;
         resultJson["userId"] = res->getInt("Id");
     }
-    resultJson["result"] = false;
+
+    return resultJson;
 }
 
 bool DatabaseConnection::veryfiRegister(json jsonData) {
@@ -230,7 +231,7 @@ json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
                 query += to_string(jsonData["receiverId"]);
                 query += " AND AuthorId = ";
                 query += to_string(jsonData["authorId"]);
-                query += " GROUP BY Message ORDER BY MAX(Date) DESC LIMIT 1;";
+                query += " GROUP BY Message, Date ORDER BY MAX(Date) DESC LIMIT 1;";
 
     try {
         res = stmt->executeQuery(query);
@@ -246,7 +247,7 @@ json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
     while(res->next())
     {
         json resultJSON;
-        resultJSON["receiverId"] = res->getInt("AuthorId");
+        resultJSON["receiverId"] = res->getInt("RecevierId");
         resultJSON["message"] = res->getString("Message");
         resultJSON["date"] = res->getString("Date");
 
@@ -287,7 +288,7 @@ json DatabaseConnection::getRecentGroupMessage(json jsonData) {
 
     std::string query = "SELECT AuthorId, Message, GroupId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM GroupMessage WHERE GroupId = ";
     query += to_string(jsonData["groupId"]);
-    query += " GROUP BY Message ORDER BY MAX(Date) DESC LIMIT 1;";
+    query += " GROUP BY Message, Date, AuthorId ORDER BY MAX(Date) DESC LIMIT 1;";
 
     try {
         res = stmt->executeQuery(query);

@@ -1,14 +1,3 @@
-// Server side C/C++ program to demonstrate Socket programming
-
-/* TO DO
- * otwieranie wielu portw dla wielu polaczen - done
- * przesyanie wiadomo.sci midzy kliebtami
- * polaczenie z baza danych
- * weryfikacja uzytkownikow
- * zapisywanie wiadomosci
- * tworzenie pokoi
- */
-
 #include "Klasy/ReceiveAndResend.h"
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -142,9 +131,10 @@ void *connection_handler(void *socket_desc) {
         mess.resize(mess.size(), 5);
         ReceiveAndResend receive = ReceiveAndResend(mess);
         messageJson = receive.getResult();
-        cout << messageJson << endl;
-       // messageJson = "cvhuj";
+        string javachuj = messageJson.dump();
         write(sock, messageJson.dump().c_str(), strlen(messageJson.dump().c_str()));
+        close(sock);
+        free(socket_desc);
     } else {
         //Free the socket pointer
         close(sock);
