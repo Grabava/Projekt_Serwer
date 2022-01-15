@@ -126,7 +126,9 @@ json DatabaseConnection::getAllUsers() {
     return resultJSON;
 }
 
-bool DatabaseConnection::createGroup(json jsonData) {
+json DatabaseConnection::createGroup(json jsonData) {
+
+    json resultJSON;
 
     std::string query = "INSERT INTO Groups_Table (Name) VALUES (";
     query += "\"";
@@ -136,7 +138,24 @@ bool DatabaseConnection::createGroup(json jsonData) {
     try {
         stmt = con->createStatement();
         stmt->execute(query);
-        return true;
+        resultJSON["result"] = true;
+    }
+    catch(sql::SQLException &e) {
+        cout << "# ERR: SQLException in " << __FILE__;
+        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+        cout << "# ERR: " << e.what();
+        cout << " (MySQL error code: " << e.getErrorCode();
+        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+        resultJSON["result"] = false;
+        return resultJSON;
+    }
+
+    std::string getGroupIdQuery = "SELECT Id FROM Group_Table WHERE Name = \"";
+    getGroupIdQuery += jsonData["groupName"];
+    getGroupIdQuery += "\";";
+
+    try {
+        res = stmt->executeQuery(query);
     }
     catch(sql::SQLException &e) {
         cout << "# ERR: SQLException in " << __FILE__;
@@ -145,7 +164,10 @@ bool DatabaseConnection::createGroup(json jsonData) {
         cout << " (MySQL error code: " << e.getErrorCode();
         cout << ", SQLState: " << e.getSQLState() << " )" << endl;
     }
-    return false;
+    while (res->next()) {
+        resultJSON["groupId"] = res->getInt("Id");
+    }
+    return resultJSON;
 }
 
 bool DatabaseConnection::addUserToGroup(json jsonData) {
@@ -227,7 +249,7 @@ bool DatabaseConnection::sendGroupMessage(json jsonData) {
 
 json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
 
-    std::string query = "SELECT Message, RecevierId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
+    std::string query = "SELECT Message, RecevierId, DATE_FORMAT(Date, '%d.%m.%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
                 query += to_string(jsonData["receiverId"]);
                 query += " AND AuthorId = ";
                 query += to_string(jsonData["authorId"]);
@@ -257,10 +279,14 @@ json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
 
 json DatabaseConnection::getPrivateMessages(json jsonData) {
 
-    std::string query = "SELECT Message, RecevierId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
+    std::string query = "SELECT AuthorId, Message, RecevierId, DATE_FORMAT(Date, '%d.%m.%Y %T') AS Date FROM PrivateMessage WHERE (RecevierId = ";
     query += to_string(jsonData["receiverId"]);
     query += " AND AuthorId = ";
     query += to_string(jsonData["authorId"]);
+    query += ") OR (RecevierId = ";
+    query += to_string(jsonData["authorId"]);
+    query += " AND AuthorId = ";
+    query += to_string(jsonData["receiverId"]);
     query += " GROUP BY Message, Date ORDER BY Date;";
 
     try {
@@ -340,7 +366,6 @@ json DatabaseConnection::getGroupMessages(json jsonData) {
     }
     return resultJSON;
 }
-
 
 
 

@@ -91,8 +91,7 @@ json ReceiveAndResend::GetAllUsers() {
 
 json ReceiveAndResend::CreateGroup(json jsonData) {
 
-    json resultJSON;
-    resultJSON["result"] = dbConnect.createGroup(jsonData);
+    json resultJSON = dbConnect.createGroup(jsonData);
 
     return resultJSON;
 }

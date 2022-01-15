@@ -35,7 +35,7 @@ public:
     bool veryfiRegister(json jsonData);
     json getAllGroups(json jsonData);
     json getAllUsers();
-    bool createGroup(json jsonData);
+    json createGroup(json jsonData);
     bool addUserToGroup(json jsonData);
     bool sendPrivateMessage(json jsonData);
     bool sendGroupMessage(json jsonData);
