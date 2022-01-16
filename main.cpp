@@ -15,13 +15,13 @@
 #define MAXSOCK 70000
 
 void *connection_handler(void *);
+int con = 0;
 
 int main()
 {
     int sockfd; //to create socket
     int socket_desc, new_socket, *new_sock;
     struct sockaddr_in serverAddress; //client will connect on this
-
     char msg1[MAXSZ];
     char msg2[MAXSZ];
     int NoOfClients = MAXSOCK;
@@ -135,6 +135,8 @@ void *connection_handler(void *socket_desc) {
         write(sock, messageJson.dump().c_str(), strlen(messageJson.dump().c_str()));
         close(sock);
         free(socket_desc);
+        con++;
+        std::cout << con << std::endl;
     } else {
         //Free the socket pointer
         close(sock);

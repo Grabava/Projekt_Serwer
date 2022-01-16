@@ -150,12 +150,12 @@ json DatabaseConnection::createGroup(json jsonData) {
         return resultJSON;
     }
 
-    std::string getGroupIdQuery = "SELECT Id FROM Group_Table WHERE Name = \"";
+    std::string getGroupIdQuery = "SELECT Id FROM Groups_Table WHERE Name = \"";
     getGroupIdQuery += jsonData["groupName"];
     getGroupIdQuery += "\";";
 
     try {
-        res = stmt->executeQuery(query);
+        res = stmt->executeQuery(getGroupIdQuery);
     }
     catch(sql::SQLException &e) {
         cout << "# ERR: SQLException in " << __FILE__;
@@ -249,11 +249,11 @@ bool DatabaseConnection::sendGroupMessage(json jsonData) {
 
 json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
 
-    std::string query = "SELECT Message, RecevierId, DATE_FORMAT(Date, '%d.%m.%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
+    std::string query = "SELECT Message, RecevierId, AuthorID, DATE_FORMAT(Date, '%d.%m.%Y %T') AS Date FROM PrivateMessage WHERE RecevierId = ";
                 query += to_string(jsonData["receiverId"]);
                 query += " AND AuthorId = ";
                 query += to_string(jsonData["authorId"]);
-                query += " GROUP BY Message, Date ORDER BY MAX(Date) DESC LIMIT 1;";
+                query += " GROUP BY Message, Date ORDER BY MAX(Date) DESC LIMIT 15;";
 
     try {
         res = stmt->executeQuery(query);
@@ -270,6 +270,7 @@ json DatabaseConnection::getRecentPrivateMessage(json jsonData) {
     {
         json resultJSON;
         resultJSON["receiverId"] = res->getInt("RecevierId");
+        resultJSON["authorId"] = res->getInt("AuthorId");
         resultJSON["message"] = res->getString("Message");
         resultJSON["date"] = res->getString("Date");
 
@@ -287,7 +288,7 @@ json DatabaseConnection::getPrivateMessages(json jsonData) {
     query += to_string(jsonData["authorId"]);
     query += " AND AuthorId = ";
     query += to_string(jsonData["receiverId"]);
-    query += " GROUP BY Message, Date ORDER BY Date;";
+    query += ") GROUP BY AuthorId, Message, RecevierId, Date ORDER BY Date;";
 
     try {
         res = stmt->executeQuery(query);
@@ -303,8 +304,9 @@ json DatabaseConnection::getPrivateMessages(json jsonData) {
 
     while(res->next())
     {
-        resultJSON += json::array({ {"receiverId", res->getInt("RecevierId")},
+        resultJSON += json::array({ {"authorId", res->getInt("AuthorId")},
                                     {"message", res->getString("Message")},
+                                    {"receiverId", res->getInt("RecevierId")},
                                     {"date", res->getString("Date")} });
     }
     return resultJSON;
@@ -314,7 +316,7 @@ json DatabaseConnection::getRecentGroupMessage(json jsonData) {
 
     std::string query = "SELECT AuthorId, Message, GroupId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM GroupMessage WHERE GroupId = ";
     query += to_string(jsonData["groupId"]);
-    query += " GROUP BY Message, Date, AuthorId ORDER BY MAX(Date) DESC LIMIT 1;";
+    query += " GROUP BY Message, Date, AuthorId ORDER BY MAX(Date) DESC LIMIT 15;";
 
     try {
         res = stmt->executeQuery(query);
