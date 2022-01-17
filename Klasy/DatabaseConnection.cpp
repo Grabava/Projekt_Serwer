@@ -314,7 +314,7 @@ json DatabaseConnection::getPrivateMessages(json jsonData) {
 
 json DatabaseConnection::getRecentGroupMessage(json jsonData) {
 
-    std::string query = "SELECT AuthorId, Message, GroupId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM GroupMessage WHERE GroupId = ";
+    std::string query = "SELECT AuthorId, Message, GroupId, DATE_FORMAT(Date, '%d.%m.%Y %T') AS Date FROM GroupMessage WHERE GroupId = ";
     query += to_string(jsonData["groupId"]);
     query += " GROUP BY Message, Date, AuthorId ORDER BY MAX(Date) DESC LIMIT 15;";
 
@@ -343,7 +343,7 @@ json DatabaseConnection::getRecentGroupMessage(json jsonData) {
 
 json DatabaseConnection::getGroupMessages(json jsonData) {
 
-    std::string query = "SELECT AuthorId, Message, GroupId, DATE_FORMAT(Date, '%d/%m/%Y %T') AS Date FROM GroupMessage WHERE GroupId = ";
+    std::string query = "SELECT AuthorId, Message, GroupId, DATE_FORMAT(Date, '%d.%m.%Y %T') AS Date FROM GroupMessage WHERE GroupId = ";
     query += to_string(jsonData["groupId"]);
     query += " GROUP BY AuthorId, Message, Date ORDER BY Date DESC;";
 
